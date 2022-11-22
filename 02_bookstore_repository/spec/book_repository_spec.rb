@@ -25,6 +25,19 @@ RSpec.describe BookRepository do
       expect(books[1].title).to eq 'Mrs Dalloway'
       expect(books[1].author_name).to eq 'Virginia Woolf'
     end
-  end
 
+    it 'filters id 1 from the book store table' do
+      repo = BookRepository.new
+      book = repo.find(1)
+      expect(book.title).to eq 'Nineteen Eighty-Four'
+      expect(book.author_name).to eq 'George Orwell'
+    end
+
+    it 'filters id 2 from the book store table' do
+      repo = BookRepository.new
+      book = repo.find(2)
+      expect(book.title).to eq 'Mrs Dalloway'
+      expect(book.author_name).to eq 'Virginia Woolf'
+    end
+  end
 end

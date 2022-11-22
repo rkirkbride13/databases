@@ -19,4 +19,19 @@ class BookRepository
     end
     return books
   end
+
+  # Gets a single record by its ID
+  # One argument: the id (number)
+  def find(id)
+    
+    sql = 'SELECT id, title, author_name FROM books WHERE id = $1;'
+    params = [id]
+    result = DatabaseConnection.exec_params(sql, params)
+    record = result[0]
+    book = Book.new
+    book.id = record['id']
+    book.title = record['title']
+    book.author_name = record['author_name']
+    return book
+  end
 end
