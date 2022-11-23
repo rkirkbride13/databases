@@ -10,5 +10,5 @@ DatabaseConnection.connect('music_library')
 artist_repository = ArtistRepository.new
 album_repository = AlbumRepository.new
 
-p artist_repository.all
-p album_repository.all
+repo = album_repository.find(1)
+puts repo.title

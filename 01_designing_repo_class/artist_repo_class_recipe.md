@@ -89,10 +89,6 @@ end
 # The keyword attr_accessor is a special Ruby feature
 # which allows us to set and get attributes on an object,
 # here's an example:
-#
-# student = Student.new
-# student.name = 'Jo'
-# student.name
 ```
 
 *You may choose to test-drive this class, but unless it contains any more logic than the example above, it is probably not needed.*
@@ -121,6 +117,29 @@ class ArtistRepository
     # Returns an array of Student objects.
   end
 
+  def find(id)
+    # Executes the SQL query:
+    # SELECT id, name, genre FROM artists WHERE id = $1;
+  end
+
+  def create(artist)
+    # Executes the SQL query:
+    # INSERT INTO artists (name, genre) VALUES ($1, $2);
+    # Returns nothing (only creates table entry)
+  end
+
+  def delete(id)
+    # Executes the SQL query:
+    # DELETE FROM artists WHERE id = $1;
+    # Returns nothing (only deletes from table)
+  end
+
+  def update(artist)
+    # Executes the SQL query:
+    # UPDATE artists SET name = $1, genre = $2 WHERE id = $3;
+    # Returns nothing (only updates table)
+  end
+
 ```
 
 ## 6. Write Test Examples
@@ -133,7 +152,7 @@ These examples will later be encoded as RSpec tests.
 # EXAMPLES
 
 # 1
-# Get all students
+# Get all artists
 
 repo = ArtistRepository.new
 
@@ -146,17 +165,50 @@ artist[0].name # =>  'Pixies'
 artist[0].genre # =>  'Rock'
 
 # 2
-# Get a single student
+# Get artist with id 1
+repo = ArtistRepository.new
+artist = repo.find(1)
+artist.id # =>  1
+artist.name # =>  'Pixies'
+artist.genre # =>  'Rock'
 
-repo = StudentRepository.new
+# 3
+# Get artist at the end of the table
+repo = ArtistRepository.new
+artist = Artist.new
+artist.name = 'Beatles'
+artist.genre = 'Pop'
+repo.create(artist)
 
-student = repo.find(1)
+artists = repo.all
+last_artist = artists.last
+last_artist.name #=> 'Beatles'
+last_artist.genre #=> 'Pop'
 
-student.id # =>  1
-student.name # =>  'David'
-student.cohort_name # =>  'April 2022'
+# 4
+# 
+repo = ArtistRepository.new
+artist = repo.find(1)
 
-# Add more examples for each method
+id_to_delete = 1
+repo.delete(id_to_delete)
+
+all_artists = repo.all
+all_artists.length #=> 1
+all_artists.first.id #=> '2'
+
+# 5
+# 
+repo = ArtistRepository.new
+artist = repo.find(1)
+artist.name = 'Something else'
+artist.genre = 'Disco'
+repo.update(artist)
+
+updated_artist = repo.find(1)
+updated_artist.name #=> 'Something else'
+updated_artist.genre #=> 'Disco'
+
 ```
 
 Encode this example as a test.

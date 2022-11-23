@@ -120,6 +120,28 @@ class AlbumRepository
     # Returns an array of Student objects.
   end
 
+  def find(id)
+    # SELECT id, title, release_year, artist_id FROM albums WHERE id = $1;
+  end
+
+  def create(album)
+    # Executes the SQL query:
+    # INSERT INTO albums (name, genre) VALUES ($1, $2);
+    # Returns nothing (only creates table entry)
+  end
+
+  def delete(id)
+    # Executes the SQL query:
+    # DELETE FROM albums WHERE id = $1;
+    # Returns nothing (only deletes from table)
+  end
+
+  def update(album)
+    # Executes the SQL query:
+    # UPDATE albums SET name = $1, genre = $2 WHERE id = $3;
+    # Returns nothing (only updates table)
+  end
+
 end
 ```
 
@@ -151,8 +173,61 @@ albums[1].title # =>  'Super Trooper'
 albums[1].release_year # =>  '1980'
 albums[1].artist_id # => '2'
 
+# 2
+# Get album with id 1
+repo = AlbumRepository.new
+album = repo.find(1)
+album.id # =>  1
+album.title # =>  'Surfer Rosa'
+album.release_year # =>  '1988'
+album.artist_id # => '1'
 
-# Add more examples for each method
+# 3
+# Get album with id 2
+repo = AlbumRepository.new
+album = repo.find(2)
+album.id # =>  2
+album.title # =>  'Super Trooper'
+album.release_year # =>  '1980'
+album.artist_id # => '2'
+
+# 4
+# Create album at the end of the table
+repo = AlbumRepository.new
+album = Album.new
+album.title = 'DAMN.'
+album.release_year = '2016'
+album.artist_id = '3'
+repo.create(album)
+
+albums = repo.all
+last_album = albums.last
+last_album.title #=> 'DAMN.'
+last_album.release_year #=> '2016'
+last_album.artist_id #=> '3'
+
+# 5
+# Delete the album with id 1
+repo = AlbumRepository.new
+album = repo.find(1)
+repo.delete(1)
+
+all_albums = repo.all
+all_albums.length #=> 1
+all_albums.first.id #=> '2'
+
+# 6
+# 
+repo = AlbumRepository.new
+album = repo.find(1)
+album.title = 'Something else'
+album.release_year = '2023'
+repo.update(album)
+
+updated_album = repo.find(1)
+updated_album.title #=> 'Something else'
+updated_album.release_year #=> '2023'
+
 ```
 
 Encode this example as a test.
@@ -169,14 +244,14 @@ This is so you get a fresh table contents every time you run the test suite.
 # file: spec/student_repository_spec.rb
 
 def reset_students_table
-  seed_sql = File.read('spec/seeds_students.sql')
-  connection = PG.connect({ host: '127.0.0.1', dbname: 'students' })
+  seed_sql = File.read('spec/seeds_albums.sql')
+  connection = PG.connect({ host: '127.0.0.1', dbname: 'music_library' })
   connection.exec(seed_sql)
 end
 
-describe StudentRepository do
+describe AlbumRepository do
   before(:each) do 
-    reset_students_table
+    reset_albums_table
   end
 
   # (your tests will go here).
