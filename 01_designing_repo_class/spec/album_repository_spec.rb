@@ -60,6 +60,24 @@ RSpec.describe AlbumRepository do
       expect(last_album.artist_id).to eq '3'
     end
 
+    it "creates a new album at the end of the table (diff matcher)" do
+      repo = AlbumRepository.new
+      new_album = Album.new
+      new_album.title = 'DAMN.'
+      new_album.release_year = '2016'
+      new_album.artist_id = '3'
+      repo.create(new_album)
+
+      albums = repo.all
+      expect(albums).to include(
+        have_attributes(
+          title: new_album.title,
+          release_year: new_album.release_year,
+          artist_id: new_album.artist_id
+          )
+        )
+    end
+
     it "deletes the album with id 1" do
       repo = AlbumRepository.new
       album = repo.find(1)

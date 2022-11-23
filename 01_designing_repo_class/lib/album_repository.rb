@@ -2,24 +2,13 @@ require_relative './album'
 
 class AlbumRepository
 
-  # Selecting all records
-  # No arguments
   def all
     sql = 'SELECT id, title, release_year, artist_id FROM albums;'
     result_set = DatabaseConnection.exec_params(sql, [])
-
     albums = []
-
     result_set.each do |record|
-      album = Album.new
-      album.id = record['id']
-      album.title = record['title']
-      album.release_year = record['release_year']
-      album.artist_id = record['artist_id']
-
-      albums << album
+      albums << record_to_album_object(record)
     end
-
     return albums
   end
 
@@ -28,12 +17,7 @@ class AlbumRepository
     params = [id]
     result_set = DatabaseConnection.exec_params(sql, params)
     record = result_set[0]
-    album = Album.new
-    album.id = record['id']
-    album.title = record['title']
-    album.release_year = record['release_year']
-    album.artist_id = record['artist_id']
-    return album
+    return record_to_album_object(record) 
   end
 
   def create(album)
@@ -55,6 +39,17 @@ class AlbumRepository
     params = [album.title, album.release_year, album.artist_id, album.id]
     DatabaseConnection.exec_params(sql, params)
     return nil
+  end
+
+  private
+
+  def record_to_album_object(record)
+    album = Album.new
+    album.id = record['id']
+    album.title = record['title']
+    album.release_year = record['release_year']
+    album.artist_id = record['artist_id']
+    return album
   end
 
 end
