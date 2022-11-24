@@ -32,18 +32,16 @@ class Application
     @io.puts "  1 - List all albums"
     @io.puts "  2 - List all artists"
     @io.print "Enter your choice: "
-    input = @io.gets.chomp.to_i
-    if input == 1
+    input = @io.gets.chomp
+    if input == "1"
       @io.puts "Here is the list of albums:"
-      repo = AlbumRepository.new
-      albums = repo.all
+      albums = @album_repository.all
       sorted_array = albums.map {|album| [album.id.to_i, album.title]}.sort
-      sorted_array.each {|album| puts "* #{album[0]} - #{album[1]}"}
+      sorted_array.each {|album| @io.puts "* #{album[0]} - #{album[1]}"}
     else
       @io.puts "Here is the list of artists:"
-      repo = ArtistRepository.new
-      artists = repo.all
-      artists.each {|artist| puts "* #{artist.id} - #{artist.name}"}
+      artists = @artist_repository.all
+      artists.each {|artist| @io.puts "* #{artist.id} - #{artist.name}"}
     end
   end
 end
