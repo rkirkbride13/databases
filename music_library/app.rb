@@ -20,18 +20,7 @@ class Application
   end
 
   def run
-    # "Runs" the terminal application
-    # so it can ask the user to enter some input
-    # and then decide to run the appropriate action
-    # or behaviour.
-
-    # Use `@io.puts` or `@io.gets` to
-    # write output and ask for user input.
-    @io.puts "Welcome to the music library manager!"
-    @io.puts "What would you like to do?"
-    @io.puts "  1 - List all albums"
-    @io.puts "  2 - List all artists"
-    @io.print "Enter your choice: "
+    prompt
     input = @io.gets.chomp
     if input == "1"
       @io.puts "Here is the list of albums:"
@@ -44,6 +33,17 @@ class Application
       artists.each {|artist| @io.puts "* #{artist.id} - #{artist.name}"}
     end
   end
+
+  private
+
+  def prompt
+    @io.puts "Welcome to the music library manager!"
+    @io.puts "What would you like to do?"
+    @io.puts "  1 - List all albums"
+    @io.puts "  2 - List all artists"
+    @io.print "Enter your choice: "
+  end
+  
 end
 
 # Don't worry too much about this if statement. It is basically saying "only
