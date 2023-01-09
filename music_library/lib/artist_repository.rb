@@ -1,4 +1,5 @@
 require_relative './artist'
+require_relative './album'
 
 class ArtistRepository
 
@@ -50,6 +51,35 @@ class ArtistRepository
     params = [artist.name, artist.genre, artist.id]
     DatabaseConnection.exec_params(sql, params)
     return nil
+  end
+
+  def find_with_album(artist_id)
+    sql = 'SELECT artists.id,
+                  artists.name,
+                  artists.genre,
+                  albums.id AS "album_id",
+                  albums.title,
+                  albums.release_year
+          FROM artists
+          JOIN albums ON albums.artist_id = artists.id
+          WHERE artists.id = $1;'
+    params = [artist_id]
+    result_set = DatabaseConnection.exec_params(sql, params)
+    record = result_set[0]
+
+    artist = Artist.new
+    artist.id = record['id']
+    artist.name = record['name']
+    artist.genre = record['genre']
+
+    result_set.each do |record|
+      album = Album.new
+      album.id = record['id']
+      album.title = record['title']
+      album.release_year = record['release_year']
+      artist.albums << album
+    end
+    return artist
   end
 
 end

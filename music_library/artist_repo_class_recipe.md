@@ -114,7 +114,7 @@ class ArtistRepository
     # Executes the SQL query:
     # SELECT id, name, genre FROM artists;
 
-    # Returns an array of Student objects.
+    # Returns an array of Artist objects.
   end
 
   def find(id)
@@ -138,6 +138,20 @@ class ArtistRepository
     # Executes the SQL query:
     # UPDATE artists SET name = $1, genre = $2 WHERE id = $3;
     # Returns nothing (only updates table)
+  end
+
+  def find_with_albums(artist_id)
+    # Executes the SQL query:
+    # SELECT albums.id AS album_id,
+    #        albums.title AS album_title,
+    #        albums.release_year,
+    #        artists.id AS artist_id,
+    #        artists.name AS artist_name,
+    #        artists.genre AS artist_genre
+    # FROM artists
+    #   JOIN albums
+    #   ON albums.artist_id = artists.id;
+    # Returns an array of Artist objects
   end
 
 ```
@@ -208,6 +222,14 @@ repo.update(artist)
 updated_artist = repo.find(1)
 updated_artist.name #=> 'Something else'
 updated_artist.genre #=> 'Disco'
+
+# 6
+repo = ArtistRepository.new
+artist = repo.find_with_album(2)
+artist.length #=> 1
+artist[0].name #=> 'ABBA'
+artist[0].genre #=> 'Pop'
+artist[0].albums #=> 'Super Trooper'
 
 ```
 
